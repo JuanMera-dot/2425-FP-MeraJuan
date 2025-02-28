@@ -11,7 +11,7 @@ fila_e = -1
 columna_e = -1
 
 if any(valor_a_buscar in fila for fila in Matriz):
-    print("Se encontró el valor buscado en la matriz = ", valor_a_buscar)
+    print("Se encontró el valor buscado en la matriz: = ", valor_a_buscar)
 
 else:
     print("El valor no se encontró. ")

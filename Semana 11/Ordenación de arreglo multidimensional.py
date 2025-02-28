@@ -19,11 +19,11 @@ def bubbleSort(arr):
 matriz_or = bubbleSort(matriz_)
 matriz_or = [matriz_or[i:i+3] for i in range (0, len(matriz_or), 3)]
 
-print("Matriz original: ", matriz)
+print("Matriz original. : ", matriz)
 for fila in matriz:
     print(fila)
 
-print("Matriz organizada: ", matriz_or)
+print("Matriz organizada. : ", matriz_or)
 for fila in matriz_or:
     print (fila)
 
