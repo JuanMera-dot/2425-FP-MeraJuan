@@ -30,4 +30,4 @@ if fila_e != -1:
     print("Se encontró el valor en la fila: ", fila_e, "y en la columna: ", columna_e )
 
 else:
-    print("No se encontró la posicion")
+    print("No se encontró la posicion.")
