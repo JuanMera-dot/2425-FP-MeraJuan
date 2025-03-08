@@ -1,7 +1,7 @@
 # Crear una matriz 3D.
 # dimension 1 = 3 ciudades (Quito, Guayaquil, Esmeraldas)
-# dimension 2 = 4 semanas
-# dimension 3 = 7 dias de la semana.
+# dimension 2 = 4 semanas..
+# dimension 3 = 7 dias de la semana...
 
 matriz_temperaturas = [
     {'ciudad': 'Quito', 'Semanas': [
