@@ -1,6 +1,6 @@
 
 print("**Bienvenido**")
-print("//// Sistema de facturacion ////")
+print("///// Sistema de facturacion /////")
 
 
 # Asignar montos para el calculo
