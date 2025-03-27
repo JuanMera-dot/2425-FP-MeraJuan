@@ -1,5 +1,5 @@
 # Trabajo con diccionarios....
-# Crear un diccionario que contenga informacion de la persona....
+# Crear un diccionario que contenga informacion de la persona
 
 
 # Diccionario original
