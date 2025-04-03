@@ -1,4 +1,4 @@
-# Acceder al archivo_Lectura 1
+## Acceder al archivo_Lectura 1
 
 print("Lectura uno\n")
 file = open('my_notes.txt', 'r')
