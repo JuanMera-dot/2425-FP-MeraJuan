@@ -1,0 +1,114 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DHT.h>
+
+// --- Definición de Pines ---
+#define DHTPIN 2
+#define DHTTYPE DHT11
+#define LED_VERDE 3
+#define LED_ROJO 4
+#define BUZZER 5
+#define LDR_PIN A0
+
+// --- Inicialización de Objetos ---
+DHT dht(DHTPIN, DHTTYPE);
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+// --- Definición de Umbrales ---
+const float TEMP_CRITICA = 25.0;
+const float HUM_CRITICA = 80.0;
+
+void setup() {
+  // Iniciar la comunicación con la computadora (Monitor Serie)
+  Serial.begin(9600);
+  
+  // Iniciar la pantalla LCD
+  lcd.init();
+  lcd.backlight();
+  
+  // Iniciar el sensor de clima
+  dht.begin();
+  
+  // Configurar los pines de los LEDs y el Zumbador como salidas
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  
+  // Mensaje de bienvenida en la pantalla (solo se muestra una vez al encender)
+  lcd.setCursor(0, 0);
+  lcd.print("Iniciando...");
+  delay(2000);
+}
+
+void loop() {
+  // 1. Leer los datos de los sensores
+  float humedad = dht.readHumidity();
+  float temperatura = dht.readTemperature();
+  int luminosidad = analogRead(LDR_PIN);
+
+  // 2. Comprobar si el sensor DHT11 está fallando
+  if (isnan(humedad) || isnan(temperatura)) {
+    Serial.println("Error leyendo el sensor DHT11");
+    
+    // Mostramos el error en la pantalla también
+    lcd.setCursor(0, 0);
+    lcd.print("Error en sensor ");
+    lcd.setCursor(0, 1);
+    lcd.print("Revisar cables  ");
+    
+    delay(2000);
+    return; // Detiene el ciclo aquí y vuelve a empezar
+  }
+
+  // 3. Mostrar los datos en el Monitor Serie (Computadora)
+  Serial.print("Temperatura: ");
+  Serial.print(temperatura);
+  Serial.println(" C");
+  
+  Serial.print("Humedad: ");
+  Serial.print(humedad);
+  Serial.println(" %");
+  
+  Serial.print("Luminosidad: ");
+  Serial.println(luminosidad);
+  
+  // 4. Lógica de Alarmas y Estado
+  if (temperatura >= TEMP_CRITICA || humedad >= HUM_CRITICA) {
+    // ESTADO DE ALERTA
+    Serial.println("Estado: ALERTA CRITICA");
+    
+    digitalWrite(LED_VERDE, LOW);  // Apaga foco verde
+    digitalWrite(LED_ROJO, HIGH);  // Enciende foco rojo
+    
+    // Hace sonar el zumbador intermitentemente
+    digitalWrite(BUZZER, HIGH);
+    delay(200);
+    digitalWrite(BUZZER, LOW);
+  } else {
+    // ESTADO NORMAL
+    Serial.println("Estado: Monitoreo");
+    
+    digitalWrite(LED_VERDE, HIGH); // Enciende foco verde
+    digitalWrite(LED_ROJO, LOW);   // Apaga foco rojo
+    digitalWrite(BUZZER, LOW);     // Apaga zumbador
+  }
+  
+  Serial.println("-------------------");
+
+  // 5. Actualizar la Pantalla LCD (Sin parpadeos)
+  // Escribimos en la primera fila (Temperatura)
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(temperatura, 1); // El 1 significa que solo mostrará un decimal
+  lcd.print(" C     ");      // Espacios extra para limpiar números viejos
+  
+  // Escribimos en la segunda fila (Humedad)
+  lcd.setCursor(0, 1);
+  lcd.print("Hum:  ");
+  lcd.print(humedad, 0);     // Sin decimales para la humedad
+  lcd.print(" %      ");     // Espacios extra para limpiar números viejos
+
+  // Pausa de 2 segundos antes de la siguiente lectura
+  delay(2000); 
+}
